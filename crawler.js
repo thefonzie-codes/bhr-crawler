@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const readline = require("readline");
 const { URL } = require("url");
 const { missingTagsCsv, brokenLinksCsv } = require("./csvWriter");
-const { htmlTags, skipRoutes } = require("./config");
+const { htmlTags, skipRoutes, MAX_CONCURRENT_BROWSERS } = require("./config");
 
 const rl = readline.createInterface({
     input: process.stdin,
