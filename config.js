@@ -13,4 +13,10 @@ const htmlTags = [
     // 'meta[property="og:description"]',
 ];
 
-module.exports = { htmlTags };
+const skipRoutes = [
+    "/blog"
+];
+
+const MAX_CONCURRENT_BROWSERS = 5;
+
+module.exports = { htmlTags, skipRoutes, MAX_CONCURRENT_BROWSERS };

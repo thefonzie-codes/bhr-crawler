@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const readline = require("readline");
 const { URL } = require("url");
 const { missingTagsCsv, brokenLinksCsv } = require("./csvWriter");
-const { htmlTags } = require("./config");
+const { htmlTags, skipRoutes } = require("./config");
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -12,8 +12,6 @@ const rl = readline.createInterface({
 const visited = new Set();
 const missingSeoTags = new Set();
 const brokenLinks = new Set();
-const skipRoutes = ["/blog"];
-const MAX_CONCURRENT_BROWSERS = 5; // Set the limit for concurrent Chrome instances
 
 const queue = []; // Queue to track pending crawl tasks
 let activeBrowsers = 0; // Counter for active browser instances
