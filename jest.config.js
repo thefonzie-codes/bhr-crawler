@@ -101,7 +101,7 @@ const config = {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  // preset: undefined,
+  preset: "jest-puppeteer",
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -145,7 +145,7 @@ const config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: "jest-environment-puppeteer",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -195,4 +195,4 @@ const config = {
   // watchman: true,
 };
 
-module.exports = config;
+module.exports = config

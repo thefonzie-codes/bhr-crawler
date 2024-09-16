@@ -133,4 +133,3 @@ try {
     rl.close();
 }
 
-module.exports = { startCrawling };
