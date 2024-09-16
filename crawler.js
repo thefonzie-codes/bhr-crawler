@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const readline = require("readline");
 const { URL } = require("url");
 const { missingTagsCsv, brokenLinksCsv } = require("./csvWriter");
-const { htmlTags, skipRoutes, MAX_CONCURRENT_BROWSERS } = require("./config");
+const { htmlTags, skipRoutes, MAX_CONCURRENT_BROWSERS, urlToCrawl } = require("./config");
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -17,7 +17,10 @@ const queue = []; // Queue to track pending crawl tasks
 let activeBrowsers = 0; // Counter for active browser instances
 
 async function crawl(baseUrl, currentUrl) {
-    if (visited.has(currentUrl) || skipRoutes.some((route) => currentUrl.includes(route))) {
+    if (
+        visited.has(currentUrl) ||
+        skipRoutes.some((route) => currentUrl.includes(route))
+    ) {
         return;
     }
 
@@ -37,7 +40,7 @@ async function crawl(baseUrl, currentUrl) {
         await page.goto(currentUrl, { waitUntil: "networkidle2" });
 
         const isPage404 = await page.evaluate(() => {
-            const title = document.querySelector('title');
+            const title = document.querySelector("title");
             return title && title.textContent.includes("404");
         });
 
@@ -49,7 +52,7 @@ async function crawl(baseUrl, currentUrl) {
         const seoErrors = await page.evaluate((htmlTags) => {
             return htmlTags.filter((tag) => !document.querySelector(tag));
         }, htmlTags);
-        
+
         if (seoErrors.length > 0) {
             missingSeoTags.add({
                 currentUrl: currentUrl,
@@ -97,7 +100,9 @@ const startCrawling = async (url) => {
     queue.push(crawl(url, url));
 
     while (queue.length > 0) {
-        await Promise.all(queue.splice(0, MAX_CONCURRENT_BROWSERS).map((task) => task));
+        await Promise.all(
+            queue.splice(0, MAX_CONCURRENT_BROWSERS).map((task) => task)
+        );
     }
 
     console.log("\n \nCrawl complete\n");
@@ -108,15 +113,24 @@ const startCrawling = async (url) => {
     await brokenLinksCsv.writeRecords(brokenLinks);
 };
 
-rl.question("Enter the URL to crawl: ", (answer) => {
-    try {
-        const url = new URL(
-            answer.startsWith("http") ? answer : "https://" + answer
-        );
-        rl.close();
-        startCrawling(url.href);
-    } catch (e) {
-        console.error("Invalid URL");
-        rl.close();
-    }
-});
+// rl.question("Enter the URL to crawl: ", (answer) => {
+//     try {
+//         const url = new URL(
+//             answer.startsWith("http") ? answer : "https://" + answer
+//         );
+//         rl.close();
+//         startCrawling(url.href);
+//     } catch (e) {
+//         console.error("Invalid URL");
+//         rl.close();
+//     }
+// });
+
+try {
+    startCrawling(urlToCrawl.href);
+} catch (e) {
+    console.error("Invalid URL");
+    rl.close();
+}
+
+module.exports = { startCrawling };

@@ -1,3 +1,5 @@
+const urlToCrawl = "http://localhost:3000";
+
 const htmlTags = [
     'title', 
     'meta[name="description"]', 
@@ -17,6 +19,6 @@ const skipRoutes = [
     "/blog"
 ];
 
-const MAX_CONCURRENT_BROWSERS = 5;
+const MAX_CONCURRENT_BROWSERS = 4;
 
-module.exports = { htmlTags, skipRoutes, MAX_CONCURRENT_BROWSERS };
+module.exports = { htmlTags, skipRoutes, MAX_CONCURRENT_BROWSERS, urlToCrawl };
